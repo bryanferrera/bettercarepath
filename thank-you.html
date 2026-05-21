@@ -757,32 +757,7 @@
     .check-badge svg { width: 32px; height: 32px; }
     .step-card { padding: 32px 24px; }
     .expect-card { padding: 44px 22px; }
-    .download-pdf { padding: 16px 24px; font-size: 15px; }
   }
-
-  /* PDF download button — placed inside the confirmation hero */
-  .download-pdf {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 8px;
-    padding: 18px 32px;
-    background: var(--c-btn);
-    color: #fff;
-    text-decoration: none;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 16px;
-    letter-spacing: 0.01em;
-    border-radius: var(--radius-pill);
-    transition: background 0.2s var(--ease-organic), transform 0.2s var(--ease-organic);
-  }
-  .download-pdf:hover { background: var(--c-btn-hover); transform: translateY(-1px); }
-  .download-pdf svg {
-    width: 18px; height: 18px;
-    transition: transform 0.25s var(--ease-organic);
-  }
-  .download-pdf:hover svg { transform: translateY(2px); }
     .reassure-content { padding: 44px 24px; }
     .reassure-media { min-height: 240px; }
   }
@@ -827,14 +802,6 @@
         <p class="confirmation-lede">We received your request.</p>
         <p class="confirmation-sub">Our team will reach out within the next 24 hours.</p>
         <p class="confirmation-aside">You'll also get a confirmation email shortly with the details.</p>
-        <a href="/assets/2026-family-care-report.pdf" download class="download-pdf" aria-label="Download the 2026 Family Care Report PDF">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3v12"/>
-            <path d="M7 10l5 5 5-5"/>
-            <path d="M5 21h14"/>
-          </svg>
-          Download Your Free Report
-        </a>
       </div>
     </div>
   </section>
