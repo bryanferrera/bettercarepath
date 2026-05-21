@@ -1,14 +1,8 @@
   /* ─── DESIGN TOKENS ─── */
   :root {
     --c-bg: #fbfbf9;
-    --c-bg-alt: #ece9e4;
-    --c-text: #292a2d;
-    --c-text-secondary: #73726c;
     --c-text-subdued: #5b666f;
     --c-white: #ffffff;
-    --c-btn: #d97757;
-    --c-btn-hover: #d78061;
-    --c-border: #e6e8e9;
     --c-accent: #004250;
     --shadow-card: 0px 17px 37px rgba(41,42,45,0.02), 0px 67px 67px rgba(41,42,45,0.02), 0px 150px 90px rgba(41,42,45,0.01), 0px 267px 107px rgba(41,42,45,0);
     --font-serif: 'Cormorant Garamond', Georgia, serif;

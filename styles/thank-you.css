@@ -1,12 +1,6 @@
   :root {
     --c-bg: #fbfbf9;
-    --c-bg-alt: #ece9e4;
-    --c-text: #292a2d;
-    --c-text-secondary: #73726c;
     --c-white: #ffffff;
-    --c-btn: #d97757;
-    --c-btn-hover: #d78061;
-    --c-border: #e6e8e9;
     --c-check: #4caf50;
     --c-x: #b85c5c;
     --shadow-card: 0px 17px 37px rgba(41,42,45,0.02), 0px 67px 67px rgba(41,42,45,0.02), 0px 150px 90px rgba(41,42,45,0.01), 0px 267px 107px rgba(41,42,45,0);

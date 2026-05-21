@@ -1,0 +1,17 @@
+/* global.css
+ * Shared design tokens for bettercarepath.com.
+ * Loaded by every page BEFORE its page-specific stylesheet, so page styles
+ * can override these defaults via the cascade if a layout truly needs to.
+ *
+ * Add a token here only when its value is identical across all 3 pages.
+ * Page-local tokens (e.g. --c-accent, --c-check, --c-bg-fallback) stay in
+ * the page's own stylesheet.
+ */
+:root {
+  --c-bg-alt: #ece9e4;
+  --c-text: #292a2d;
+  --c-text-secondary: #73726c;
+  --c-btn: #d97757;
+  --c-btn-hover: #d78061;
+  --c-border: #e6e8e9;
+}

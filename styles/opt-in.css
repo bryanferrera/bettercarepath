@@ -1,11 +1,5 @@
     :root {
       --c-bg-fallback: #1a1a1c;
-      --c-bg-alt: #ece9e4;
-      --c-text: #292a2d;
-      --c-text-secondary: #73726c;
-      --c-btn: #d97757;
-      --c-btn-hover: #d78061;
-      --c-border: #e6e8e9;
       --c-border-hover: #c8c5bd;
       --c-success: #2d7a4f;
 
