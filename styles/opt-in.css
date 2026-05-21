@@ -1,13 +1,13 @@
     :root {
-      --color-bg-fallback: #1a1a1c;
-      --color-bg-alt: #ece9e4;
-      --color-text-primary: #292a2d;
-      --color-text-secondary: #73726c;
-      --color-orange: #d97757;
-      --color-orange-hover: #d78061;
-      --color-input-border: #e6e8e9;
-      --color-input-border-hover: #c8c5bd;
-      --color-success: #2d7a4f;
+      --c-bg-fallback: #1a1a1c;
+      --c-bg-alt: #ece9e4;
+      --c-text: #292a2d;
+      --c-text-secondary: #73726c;
+      --c-btn: #d97757;
+      --c-btn-hover: #d78061;
+      --c-border: #e6e8e9;
+      --c-border-hover: #c8c5bd;
+      --c-success: #2d7a4f;
 
       --serif: 'Fraunces', 'Reckless', 'Tiempos', 'Charter', 'Iowan Old Style', Georgia, serif;
       --sans: 'DM Sans', 'Inter', 'Matter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -26,7 +26,7 @@
     body {
       font-family: var(--sans);
       color: #fff;
-      background-color: var(--color-bg-fallback);
+      background-color: var(--c-bg-fallback);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
@@ -53,7 +53,7 @@
       height: 100%;
       object-fit: cover;
       z-index: -2;
-      background-color: var(--color-bg-fallback);
+      background-color: var(--c-bg-fallback);
     }
 
     .hero-overlay {
@@ -195,9 +195,9 @@
     .form-card:hover .input,
     .form-card:focus-within .input,
     .form-card.is-tapped .input {
-      background: var(--color-bg-alt);
-      color: var(--color-text-primary);
-      border-color: var(--color-input-border);
+      background: var(--c-bg-alt);
+      color: var(--c-text);
+      border-color: var(--c-border);
     }
     .form-card:hover .input::placeholder,
     .form-card:focus-within .input::placeholder,
@@ -205,7 +205,7 @@
       color: #a39f95;
     }
     .form-card:focus-within .input:focus {
-      border-color: var(--color-orange);
+      border-color: var(--c-btn);
       box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.18);
     }
 
@@ -220,7 +220,7 @@
       font-size: 16px;
       font-weight: 600;
       color: #fff;
-      background: var(--color-orange);
+      background: var(--c-btn);
       border: 0;
       border-radius: 9999px;
       padding: 14px 28px;
@@ -249,7 +249,7 @@
       overflow: hidden;
       white-space: nowrap;
     }
-    .submit:hover { background: var(--color-orange-hover); }
+    .submit:hover { background: var(--c-btn-hover); }
     .submit:hover .submit__arrow {
       width: 18px;
       opacity: 1;
@@ -278,7 +278,7 @@
     }
     .form-card:hover .microcopy,
     .form-card:focus-within .microcopy,
-    .form-card.is-tapped .microcopy { color: var(--color-text-secondary); }
+    .form-card.is-tapped .microcopy { color: var(--c-text-secondary); }
 
     .field-error {
       font-family: var(--sans);
@@ -302,7 +302,7 @@
       height: 48px;
       margin: 0 auto 18px;
       border-radius: 50%;
-      background: var(--color-success);
+      background: var(--c-success);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -314,14 +314,14 @@
       font-weight: 300;
       line-height: 1.25;
       letter-spacing: -0.01em;
-      color: var(--color-text-primary);
+      color: var(--c-text);
       margin: 0 0 10px;
     }
     .success__body {
       font-family: var(--sans);
       font-size: 14px;
       line-height: 1.6;
-      color: var(--color-text-secondary);
+      color: var(--c-text-secondary);
       margin: 0 auto;
       max-width: 320px;
     }
