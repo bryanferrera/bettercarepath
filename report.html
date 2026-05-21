@@ -470,7 +470,12 @@
         }, { passive: true });
       }
 
-      form.addEventListener('submit', (e) => {
+      const WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/Z5ogVfjx3loMkiXrfnTJ/webhook-trigger/19413add-28f9-49b7-9bbe-afcf115fec34';
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const submitLabel = submitBtn ? submitBtn.querySelector('.submit__label') : null;
+      const originalLabelText = submitLabel ? submitLabel.textContent : 'Get The Free Report';
+
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorEl.textContent = '';
 
@@ -496,23 +501,38 @@
           return;
         }
 
-        // PHASE 1 PLACEHOLDER — Phase 2 replaces console.log with a Go HighLevel API call,
-        // and the redirect runs after the API resolves.
-        console.log('Opt-in submitted:', data);
-        card.classList.add('is-success');
-        card.classList.remove('is-tapped');
+        // Loading state — prevent double-submit
+        submitBtn.disabled = true;
+        if (submitLabel) submitLabel.textContent = 'Sending…';
 
-        card.innerHTML = [
-          '<div class="success" role="status" aria-live="polite">',
-            '<div class="success__icon" aria-hidden="true">',
-              '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
-            '</div>',
-            '<p class="success__title">Check your email.</p>',
-            '<p class="success__body">Your 2026 Family Care Report is on the way. We&rsquo;ll text you a copy too so you have it handy.</p>',
-          '</div>'
-        ].join('');
+        try {
+          const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (!response.ok) throw new Error('Webhook returned status ' + response.status);
 
-        setTimeout(() => { window.location.href = '/thank-you'; }, 1500);
+          // Success — show the confirmation card, then redirect to /thank-you
+          card.classList.add('is-success');
+          card.classList.remove('is-tapped');
+          card.innerHTML = [
+            '<div class="success" role="status" aria-live="polite">',
+              '<div class="success__icon" aria-hidden="true">',
+                '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+              '</div>',
+              '<p class="success__title">Check your email.</p>',
+              '<p class="success__body">Your 2026 Family Care Report is on the way. We&rsquo;ll text you a copy too so you have it handy.</p>',
+            '</div>'
+          ].join('');
+          setTimeout(() => { window.location.href = '/thank-you'; }, 1500);
+
+        } catch (err) {
+          console.error('Opt-in submission failed:', err);
+          errorEl.textContent = 'Something went wrong sending your details. Please try again in a moment.';
+          submitBtn.disabled = false;
+          if (submitLabel) submitLabel.textContent = originalLabelText;
+        }
       });
     })();
   </script>
