@@ -1,0 +1,2512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>M&L In-Home Care — Los Angeles & San Fernando Valley</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+
+
+<style>
+  /* ─── DESIGN TOKENS ─── */
+  :root {
+    --c-bg: #fbfbf9;
+    --c-bg-alt: #ece9e4;
+    --c-text: #292a2d;
+    --c-text-secondary: #73726c;
+    --c-text-subdued: #5b666f;
+    --c-white: #ffffff;
+    --c-btn: #d97757;
+    --c-btn-hover: #d78061;
+    --c-border: #e6e8e9;
+    --c-accent: #004250;
+    --shadow-card: 0px 17px 37px rgba(41,42,45,0.02), 0px 67px 67px rgba(41,42,45,0.02), 0px 150px 90px rgba(41,42,45,0.01), 0px 267px 107px rgba(41,42,45,0);
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-pill: 9999px;
+    --max-w: 1280px;
+    --pad-h: 40px;
+    --ease-organic: cubic-bezier(0.22, 1, 0.36, 1);
+    --dur-btn: 0.45s;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  /* ─── DECK-STYLE SNAP SCROLL (desktop only) ─── */
+  @media (min-width: 901px) {
+    html {
+      scroll-padding-top: 64px;
+    }
+    #solution,
+    #why,
+    #services,
+    #testimonials,
+    #process,
+    #faq,
+    #cta-final {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+    }
+    #solution > .container,
+    #why > .container,
+    #services > .container,
+    #testimonials > .container,
+    #process > .container,
+    #faq > .container,
+    #cta-final > .container {
+      width: 100%;
+    }
+    #services,
+    #testimonials,
+    #faq {
+      padding-top: 100px;
+      padding-bottom: 100px;
+    }
+    .faq-item { padding: 16px 0; }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--c-bg);
+    color: var(--c-text);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ─── CONTAINER ─── */
+  .container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 var(--pad-h);
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(251,251,249,0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--c-border);
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+  nav.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+  }
+  @media (max-width: 900px) {
+    nav.is-hidden {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    nav { transition: none; }
+  }
+  .nav-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 var(--pad-h);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--c-text);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    color: var(--c-text-secondary);
+    text-decoration: none;
+    transition: color var(--dur-btn) var(--ease-organic);
+  }
+  .nav-links a:not(.nav-cta) {
+    position: relative;
+  }
+  .nav-links a:not(.nav-cta)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 1.5px;
+    background: var(--c-btn);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-btn) var(--ease-organic);
+  }
+  .nav-links a:not(.nav-cta):hover { color: var(--c-btn); }
+  .nav-links a:not(.nav-cta):hover::after { transform: scaleX(1); }
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    background: var(--c-btn);
+    color: var(--c-white) !important;
+    padding: 8px 20px;
+    border-radius: var(--radius-pill);
+    font-size: 14px !important;
+    line-height: 1;
+    transition: background var(--dur-btn) var(--ease-organic) !important;
+  }
+  .nav-cta:hover { background: var(--c-btn-hover) !important; color: var(--c-white) !important; }
+  .nav-cta::after {
+    content: '→';
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    font-size: 1.25em;
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width var(--dur-btn) var(--ease-organic), margin-left var(--dur-btn) var(--ease-organic), opacity var(--dur-btn) var(--ease-organic);
+  }
+  .nav-cta:hover::after {
+    max-width: 1.5em;
+    margin-left: 6px;
+    opacity: 1;
+  }
+  .nav-mobile-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--c-text);
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    border-radius: var(--radius-pill);
+    padding: 10px 24px;
+    height: 44px;
+    text-decoration: none;
+    transition: background var(--dur-btn) var(--ease-organic), transform var(--dur-btn) var(--ease-organic);
+    letter-spacing: -0.2px;
+  }
+  .btn-primary { background: var(--c-btn); color: var(--c-white); }
+  .btn-primary:hover { background: var(--c-btn-hover); transform: translateY(-1px); }
+  .btn-primary::after {
+    content: '→';
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    font-size: 1.25em;
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width var(--dur-btn) var(--ease-organic), margin-left var(--dur-btn) var(--ease-organic), opacity var(--dur-btn) var(--ease-organic);
+  }
+  .btn-primary:hover::after {
+    max-width: 1.5em;
+    margin-left: 8px;
+    opacity: 1;
+  }
+  .btn-sm { font-size: 14px; height: 36px; padding: 8px 18px; }
+
+  /* ─── LOCATION PILL ─── */
+  .location-pill {
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: #A6A09B;
+  }
+
+  /* ─── SCROLL ANIMATION ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+
+  /* ─── SECTION HEADINGS ─── */
+  .section-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-text-secondary);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--font-sans);
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 58px;
+    letter-spacing: -1.92px;
+    color: var(--c-text);
+    margin-bottom: 24px;
+  }
+  @keyframes title-em-shine {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+  .section-title em,
+  .problem-card-headline em,
+  .outcome-headline em,
+  .objection-bold em {
+    font-style: italic;
+    display: inline-block;
+    padding: 0 0.12em;
+    margin: 0 -0.12em;
+    background: linear-gradient(
+      90deg,
+      #C2AB8E 0%,
+      #C2AB8E 42%,
+      #F0DDC2 50%,
+      #C2AB8E 58%,
+      #C2AB8E 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: title-em-shine 7s linear infinite;
+  }
+  /* ─── ICON CIRCLE ─── */
+  .icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--c-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 280ms ease, transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .icon-circle svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--c-white);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ─── PLACEHOLDER IMAGE ─── */
+  .img-placeholder {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    background: #e8e4de;
+  }
+  .img-placeholder-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    text-align: center;
+    gap: 12px;
+    min-height: 420px;
+  }
+  .img-placeholder-stripes {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 12px,
+      rgba(115,114,108,0.07) 12px,
+      rgba(115,114,108,0.07) 13px
+    );
+  }
+  .img-placeholder-label {
+    position: relative;
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--c-text-secondary);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 1: HERO
+  ═══════════════════════════════════════ */
+  #hero {
+    position: relative;
+    background-image: url('/images/hero-bg.jpg');
+    background-size: cover;
+    background-position: 60% center;
+    background-repeat: no-repeat;
+    padding-top: calc(80px + 64px);
+    padding-bottom: 160px;
+    overflow: hidden;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 18, 15, 0.48);
+    z-index: 0;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .hero-text { max-width: 760px; }
+
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 24px;
+  }
+  .hero-headline {
+    font-family: var(--font-sans);
+    font-size: 72px;
+    font-weight: 400;
+    line-height: 78px;
+    letter-spacing: -2.7px;
+    color: #ffffff;
+    margin-bottom: 24px;
+  }
+  .hero-headline em {
+    font-style: italic;
+    display: inline-block;
+    padding: 0 0.12em;
+    margin: 0 -0.12em;
+    background: linear-gradient(
+      90deg,
+      #cfc6b0 0%,
+      #cfc6b0 35%,
+      #ffffff 50%,
+      #cfc6b0 65%,
+      #cfc6b0 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: title-em-shine 7s linear infinite;
+  }
+  .hero-subheadline {
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .hero-bullets {
+    list-style: none;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .hero-bullets li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    line-height: 26px;
+    color: rgba(255,255,255,0.88);
+  }
+  .hero-bullets li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    flex-shrink: 0;
+  }
+
+  /* ─── SHARED INPUT (used by hero easy-form) ─── */
+  .trust-cta-input {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--c-text);
+    background: var(--c-bg-alt);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 0 18px;
+    height: 44px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 180px;
+  }
+  .trust-cta-input:focus { border-color: var(--c-text-secondary); }
+  .trust-cta-input::placeholder { color: #b0aea9; }
+  .trust-cta-btn { white-space: nowrap; flex-shrink: 0; }
+
+  /* ─── HERO EASY-FORM (glass → solid on hover) ─── */
+  .hero-easy-form {
+    margin-top: 32px;
+    max-width: 560px;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.22);
+    transition: background 240ms ease, border-color 240ms ease,
+                box-shadow 240ms ease, transform 240ms ease;
+  }
+  .hero-easy-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+    transition: color 240ms ease;
+  }
+  .hero-easy-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.82);
+    margin: 0 0 18px;
+    transition: color 240ms ease;
+  }
+  .hero-easy-form form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .hero-easy-form .trust-cta-input {
+    background: rgba(255,255,255,0.10);
+    color: #fff;
+    border-color: rgba(255,255,255,0.28);
+    width: auto;
+    flex: 1;
+    min-width: 140px;
+    transition: background 240ms ease, border-color 240ms ease, color 240ms ease;
+  }
+  .hero-easy-form .trust-cta-input::placeholder { color: rgba(255,255,255,0.65); }
+
+  .hero-easy-form:hover,
+  .hero-easy-form:focus-within,
+  .hero-easy-form.is-tapped {
+    background: #ffffff;
+    border-color: rgba(0,0,0,0.06);
+    box-shadow: 0 18px 50px rgba(20,18,15,0.28);
+    transform: translateY(-2px);
+  }
+  .hero-easy-form:hover .hero-easy-title,
+  .hero-easy-form:focus-within .hero-easy-title,
+  .hero-easy-form.is-tapped .hero-easy-title { color: var(--c-text); }
+  .hero-easy-form:hover .hero-easy-desc,
+  .hero-easy-form:focus-within .hero-easy-desc,
+  .hero-easy-form.is-tapped .hero-easy-desc { color: var(--c-text-secondary); }
+  .hero-easy-form:hover .trust-cta-input,
+  .hero-easy-form:focus-within .trust-cta-input,
+  .hero-easy-form.is-tapped .trust-cta-input {
+    background: var(--c-bg-alt);
+    color: var(--c-text);
+    border-color: var(--c-border);
+  }
+  .hero-easy-form:hover .trust-cta-input::placeholder,
+  .hero-easy-form:focus-within .trust-cta-input::placeholder,
+  .hero-easy-form.is-tapped .trust-cta-input::placeholder { color: #b0aea9; }
+  @media (max-width: 900px) {
+    .hero-easy-form { max-width: 100%; }
+  }
+
+  /* ═══════════════════════════════════════
+     BENTO GRID (used inside Still Wondering)
+  ═══════════════════════════════════════ */
+  .bento-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "big top"
+      "big bottom";
+    gap: 16px;
+    min-height: 340px;
+  }
+  .bento-card {
+    background: #dcd8d2;
+    border-radius: 20px;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    min-height: 220px;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+  }
+  .bento-card:nth-child(1) { grid-area: big; }
+  .bento-card:nth-child(2) { grid-area: top; }
+  .bento-card:nth-child(3) { grid-area: bottom; }
+  .bento-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: transform;
+  }
+  @media (hover: hover) and (min-width: 901px) {
+    .bento-card:hover .bento-card-img { transform: scale(1.07); }
+  }
+  .bento-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 45%, rgba(0,0,0,0.05) 80%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .bento-card-text {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 30px;
+    letter-spacing: -0.88px;
+    color: #ffffff;
+    margin: 0;
+    max-width: 100%;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 12px rgba(0,0,0,0.25);
+  }
+  @media (max-width: 900px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas: "big" "top" "bottom";
+      min-height: 0;
+      gap: 14px;
+    }
+    .bento-card { padding: 32px; min-height: 200px; }
+    .bento-card-text {
+      font-size: 20px;
+      line-height: 28px;
+      letter-spacing: -0.8px;
+    }
+  }
+  @media (max-width: 480px) {
+    .bento-card { padding: 28px; min-height: 180px; }
+    .bento-card-text {
+      font-size: 18px;
+      line-height: 26px;
+      letter-spacing: -0.72px;
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 3: PROBLEM
+  ═══════════════════════════════════════ */
+  #problem {
+    background: var(--c-bg);
+    padding: 160px 0;
+  }
+  .problem-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: stretch;
+  }
+  .problem-carousel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    min-height: 600px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #d9d4ca;
+  }
+  .problem-carousel-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .problem-carousel-img.active { opacity: 1; }
+  .problem-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+  }
+  .problem-card-block {
+    background: var(--c-white);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    box-shadow: var(--shadow-card);
+  }
+  .problem-card-block .section-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-text-secondary);
+    margin-bottom: 16px;
+  }
+  .problem-card-headline {
+    font-family: var(--font-sans);
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 58px;
+    color: var(--c-text);
+    margin-bottom: 24px;
+    letter-spacing: -1.92px;
+  }
+  .problem-body p {
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--c-text);
+    margin-bottom: 16px;
+  }
+  .problem-body p:last-child { margin-bottom: 0; }
+  .problem-subheading {
+    font-size: 18px;
+    color: var(--c-text);
+    margin-bottom: 24px;
+  }
+  .problem-checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .problem-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-text);
+  }
+  .problem-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--c-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .problem-check svg {
+    width: 12px;
+    height: 12px;
+    stroke: #fff;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 768px) {
+    .problem-inner { grid-template-columns: 1fr; gap: 24px; }
+    .problem-carousel { min-height: 400px; }
+    .problem-card-block { padding: 32px; }
+    .problem-card-headline { font-size: 38px; line-height: 46px; }
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 4: SOLUTION
+  ═══════════════════════════════════════ */
+  #solution {
+    background: var(--c-bg);
+    padding: 160px 0;
+  }
+  .solution-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .solution-services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .service-pill {
+    background: var(--c-bg-alt);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--c-text);
+    line-height: 22px;
+    cursor: default;
+    transition: background var(--dur-btn) var(--ease-organic), transform var(--dur-btn) var(--ease-organic), box-shadow var(--dur-btn) var(--ease-organic);
+  }
+  .service-pill:hover {
+    background: var(--c-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(41,42,45,0.06);
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 5: EMOTIONAL OUTCOME
+  ═══════════════════════════════════════ */
+  #outcome {
+    background: var(--c-bg-alt);
+    padding: 160px 0;
+  }
+  .outcome-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: stretch;
+  }
+  .outcome-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    min-height: 600px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #d9d4ca;
+  }
+  .outcome-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .outcome-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+  }
+  .outcome-card-block {
+    background: var(--c-white);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    box-shadow: var(--shadow-card);
+  }
+  .outcome-card-block .section-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-text-secondary);
+    margin-bottom: 16px;
+  }
+  .outcome-card-block .outcome-headline {
+    font-family: var(--font-sans);
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 58px;
+    color: var(--c-text);
+    margin-bottom: 24px;
+    letter-spacing: -1.92px;
+  }
+  .outcome-body p {
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--c-text);
+    margin-bottom: 16px;
+  }
+  .outcome-body p:last-child { margin-bottom: 0; }
+  .outcome-subheading {
+    font-size: 18px;
+    color: var(--c-text);
+    margin-bottom: 24px;
+  }
+  .outcome-checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .outcome-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-text);
+  }
+  .outcome-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--c-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .outcome-check svg {
+    width: 12px;
+    height: 12px;
+    stroke: #fff;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 768px) {
+    .outcome-inner { grid-template-columns: 1fr; gap: 24px; }
+    .outcome-card-block { padding: 32px; }
+    .outcome-card-block .outcome-headline { font-size: 38px; line-height: 46px; }
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 6: WHY M&L
+  ═══════════════════════════════════════ */
+  #why {
+    background: var(--c-bg);
+    padding: 160px 0;
+  }
+  .why-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "header header"
+      "media list";
+    column-gap: 80px;
+    row-gap: 56px;
+    align-items: center;
+  }
+  .why-header {
+    grid-area: header;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .why-media { grid-area: media; }
+  .why-list { grid-area: list; }
+  .why-desc {
+    font-size: 18px;
+    line-height: 30px;
+    color: var(--c-text-secondary);
+    max-width: 600px;
+  }
+  .why-reasons {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .why-reason {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .why-reason .icon-circle {
+    width: 52px;
+    height: 52px;
+  }
+  .why-reason .icon-circle svg {
+    width: 20px;
+    height: 20px;
+  }
+  .why-reason-text { font-size: 18px; line-height: 30px; color: var(--c-text); }
+  .why-slider {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-top: 16px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--c-bg-alt);
+  }
+  .why-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .why-slide.is-active { opacity: 1; }
+  .why-slider-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+  }
+  .why-slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .why-slider-dot:hover { background: rgba(255,255,255,0.9); }
+  .why-slider-dot.is-active { background: #fff; transform: scale(1.3); }
+
+  /* ═══════════════════════════════════════
+     SECTION 7: SERVICES
+  ═══════════════════════════════════════ */
+  #services {
+    background: var(--c-bg-alt);
+    padding: 160px 0;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 64px;
+  }
+  .service-card {
+    background: var(--c-white);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
+                box-shadow 320ms ease;
+  }
+  .service-card-title {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--c-text);
+    line-height: 26px;
+    letter-spacing: -0.3px;
+    transition: color 240ms ease;
+  }
+  .service-card-desc {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--c-text-secondary);
+  }
+  .service-card::after {
+    content: 'Learn more →';
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-btn);
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 280ms ease, transform 280ms ease;
+  }
+  @media (hover: hover) and (min-width: 901px) {
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 44px rgba(41,42,45,0.14);
+    }
+    .service-card:hover .icon-circle {
+      background: var(--c-btn);
+    }
+    .service-card:hover::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .services-cta {
+    margin-top: 56px;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 8: OBJECTION
+  ═══════════════════════════════════════ */
+  #objection {
+    background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-alt) 100%);
+    padding: 40px 0;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+  }
+  .objection-inner {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    background: var(--c-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    padding: 56px 56px;
+  }
+  .objection-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .objection-header .section-eyebrow {
+    margin-bottom: 0;
+  }
+  .objection-header .section-title {
+    margin-bottom: 0;
+  }
+  .objection-header .section-title em {
+    font-style: italic;
+    background-image: linear-gradient(to right, var(--c-btn), #90728e, #ff9c7c, var(--c-btn));
+    background-size: 300% 100%;
+    background-repeat: repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradientYoyo 18s ease-in-out infinite;
+  }
+  @keyframes gradientYoyo {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .objection-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 640px;
+  }
+  .objection-body p {
+    font-size: 20px;
+    line-height: 32px;
+    color: var(--c-text);
+    margin: 0;
+  }
+  .objection-bold {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    line-height: 38px;
+    font-weight: 300;
+    color: var(--c-text);
+    letter-spacing: -0.3px;
+    max-width: 640px;
+  }
+  .objection-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    #objection { min-height: 0; padding: 80px 0; }
+    .objection-inner { gap: 40px; padding: 56px 28px; }
+    .objection-bold { font-size: 22px; line-height: 32px; }
+    .objection-body p { font-size: 18px; line-height: 28px; }
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 9: TESTIMONIALS
+  ═══════════════════════════════════════ */
+  #testimonials {
+    background: var(--c-bg-alt);
+    padding: 160px 0;
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 64px;
+  }
+  .testimonial-card {
+    background: linear-gradient(180deg, #f9f8f7 0%, #f4f2f7 100%);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
+                box-shadow 280ms ease,
+                z-index 0s linear 0s;
+    will-change: transform;
+  }
+  .testimonial-stars {
+    color: #b5a99a;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+  .testimonial-quote {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-text);
+    font-style: italic;
+    transition: font-size 280ms ease, line-height 280ms ease;
+  }
+  .testimonial-attr {
+    font-size: 13px;
+    color: var(--c-text-secondary);
+    margin-top: auto;
+  }
+  @media (hover: hover) and (min-width: 901px) {
+    .testimonial-card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 24px 60px rgba(41,42,45,0.14);
+      z-index: 5;
+      position: relative;
+    }
+    .testimonial-card:hover .testimonial-quote {
+      font-size: 18px;
+      line-height: 28px;
+    }
+  }
+  .testimonials-cta {
+    margin-top: 56px;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 10: PROCESS
+  ═══════════════════════════════════════ */
+  #process {
+    background: var(--c-bg);
+    padding: 160px 0;
+  }
+  .process-inner {
+    background: var(--c-text);
+    border-radius: 28px;
+    box-shadow: 0 30px 80px rgba(41,42,45,0.10),
+                0 8px 24px rgba(41,42,45,0.06);
+    padding: 80px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .process-bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .process-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20,18,15,0.82) 0%, rgba(20,18,15,0.62) 60%, rgba(20,18,15,0.78) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .process-inner > .process-header,
+  .process-inner > .process-steps {
+    position: relative;
+    z-index: 2;
+  }
+  .process-inner .section-eyebrow { color: rgba(255,255,255,0.78); }
+  .process-inner .section-title { color: #ffffff; }
+  .process-inner .process-step-number { color: rgba(255,255,255,0.35); }
+  .process-inner .process-step-title { color: #ffffff; }
+  .process-inner .process-step-desc { color: rgba(255,255,255,0.82); }
+  .process-header {
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .process-step {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .process-step-number {
+    font-family: var(--font-sans);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--c-border);
+    line-height: 1;
+    letter-spacing: -1.2px;
+  }
+  .process-step-title {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--c-text);
+    letter-spacing: -0.4px;
+    line-height: 34px;
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .process-step-title { min-height: 0; display: block; }
+  }
+  .process-step-desc {
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--c-text-secondary);
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 11: LOCAL
+  ═══════════════════════════════════════ */
+  #local {
+    background: var(--c-bg-alt);
+    padding: 160px 0;
+  }
+  .local-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .local-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 12: FAQ
+  ═══════════════════════════════════════ */
+  #faq {
+    background: var(--c-bg);
+    padding: 160px 0;
+  }
+  .faq-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .faq-item {
+    border-top: 1px solid var(--c-border);
+    padding: 20px 0;
+  }
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--c-border);
+  }
+  .faq-question {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--c-text);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    user-select: none;
+  }
+  .faq-question:hover { color: var(--c-text-secondary); }
+  .faq-chevron {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-answer {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--c-text-secondary);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s ease;
+  }
+  .faq-item.open .faq-answer {
+    max-height: 200px;
+    padding-top: 12px;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION 13: FINAL CTA
+  ═══════════════════════════════════════ */
+  #cta-final {
+    background: var(--c-bg-alt);
+    padding: 120px 0;
+  }
+  .cta-final-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .cta-final-left .section-title { margin-bottom: 16px; }
+  .cta-final-subtitle {
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--c-text-secondary);
+  }
+  .cta-form {
+    background: var(--c-white);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-label {
+    font-size: 13px;
+    color: var(--c-text-secondary);
+    letter-spacing: 0.02em;
+  }
+  .form-input {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    color: var(--c-text);
+    background: var(--c-bg);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--c-text-secondary); }
+  .form-input::placeholder { color: #b0aea9; }
+  .form-textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+  .form-microcopy {
+    font-size: 13px;
+    color: var(--c-text-secondary);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+  footer {
+    background: var(--c-text);
+    color: var(--c-white);
+    padding: 60px 0 40px;
+  }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 60px;
+    align-items: start;
+  }
+  .footer-logo {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--c-white);
+    letter-spacing: -0.5px;
+  }
+  .footer-links {
+    display: flex;
+    gap: 60px;
+  }
+  .footer-col-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+  }
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-col ul li a {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: var(--c-white); }
+  .footer-contact { text-align: right; }
+  .footer-contact a {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+  .footer-contact a:hover { color: var(--c-white); }
+  .footer-bottom {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    :root { --pad-h: 24px; }
+
+    #hero { padding-top: calc(60px + 64px); padding-bottom: 120px; background-position: center center; }
+    .hero-inner { flex-direction: column; }
+    .hero-text { max-width: 100%; }
+    .hero-headline { font-size: 54px; line-height: 62px; }
+
+    .problem-inner,
+    .solution-inner,
+    .outcome-inner,
+    .why-inner,
+    .faq-inner,
+    .local-inner,
+    .cta-final-inner { grid-template-columns: 1fr; gap: 48px; }
+    .why-inner { grid-template-areas: "header" "media" "list"; }
+
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; gap: 40px; }
+    .process-inner { padding: 56px 32px; gap: 40px; border-radius: 22px; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+
+    #problem, #solution, #outcome, #why, #services,
+    #objection, #testimonials, #process, #local,
+    #faq, #cta-final { padding: 100px 0; }
+
+    .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    .footer-contact { text-align: left; }
+    .nav-links { display: none; }
+    .nav-mobile-btn { display: flex; }
+  }
+
+  @media (max-width: 480px) {
+    :root { --pad-h: 20px; }
+    #hero { padding-top: calc(40px + 64px); padding-bottom: 80px; }
+    .hero-headline { font-size: 44px; line-height: 52px; }
+    .section-title { font-size: 38px; line-height: 46px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .solution-services { grid-template-columns: 1fr; }
+    .footer-links { flex-direction: column; gap: 32px; }
+    #problem, #solution, #outcome, #why, #services,
+    #objection, #testimonials, #process, #local,
+    #faq, #cta-final { padding: 80px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">M&L</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">How It Works</a></li>
+      <li><a href="#testimonials">Testimonials</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#cta-final" class="nav-cta">Book Consultation</a></li>
+    </ul>
+    <button class="nav-mobile-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── SECTION 1: HERO ─── -->
+<section id="hero">
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <!-- Text -->
+      <div class="hero-text">
+        <p class="hero-eyebrow reveal">For Adult Children Of Aging Parents In Los Angeles &amp; San Fernando Valley</p>
+        <h1 class="hero-headline reveal delay-1">
+          Help Your Parent Stay Safe At Home<br/><em>Without Doing Everything<br/>On Your Own</em>
+        </h1>
+        <p class="hero-subheadline reveal delay-2">
+          Get trusted in-home care so your loved one stays comfortable and independent, while you finally get real support and peace of mind.
+        </p>
+        <ul class="hero-bullets reveal delay-3">
+          <li>Personal care, companionship, and daily support</li>
+          <li>Flexible care from a few hours to 24/7</li>
+          <li>Serving Los Angeles &amp; San Fernando Valley</li>
+        </ul>
+        <div class="reveal delay-4 hero-easy-form">
+          <p class="hero-easy-title">Ready to get started?</p>
+          <p class="hero-easy-desc">Trusted support for families who need real help at home. Leave your details and we'll call you back.</p>
+          <form onsubmit="handleTrustFormSubmit(event)">
+            <input class="trust-cta-input" id="hero-tc-name" type="text" placeholder="Your name" required />
+            <input class="trust-cta-input" id="hero-tc-phone" type="tel" placeholder="Phone number" required />
+            <button type="submit" class="btn btn-primary trust-cta-btn">Book Consultation</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 3: PROBLEM ─── -->
+<section id="problem">
+  <div class="container">
+    <div class="problem-inner">
+      <!-- Left: Two stacked cards -->
+      <div class="problem-cards">
+        <!-- Card 1: Main problem statement -->
+        <div class="problem-card-block reveal-left delay-1">
+          <p class="section-eyebrow">The Challenge</p>
+          <h2 class="problem-card-headline">You've Been Carrying <em>More Than You Should</em></h2>
+          <div class="problem-body">
+            <p>Maybe your parent is forgetting things.</p>
+            <p>Maybe they need help with daily tasks.</p>
+            <p>Maybe they say they're "fine"… but you know things have changed.</p>
+            <p>Now you're trying to keep them safe, respect their independence, and manage your own life.</p>
+            <p>That's a lot to carry alone.</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Support indicators checklist -->
+        <div class="problem-card-block reveal-left delay-2">
+          <p class="problem-subheading">You may need support if:</p>
+          <ul class="problem-checklist">
+            <li>
+              <span class="problem-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              You worry about falls or missed medications
+            </li>
+            <li>
+              <span class="problem-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              Daily tasks are getting harder for them
+            </li>
+            <li>
+              <span class="problem-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              You're stretched thin trying to keep up
+            </li>
+            <li>
+              <span class="problem-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              You don't want to make the wrong decision
+            </li>
+            <li>
+              <span class="problem-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              You want them to stay home safely
+            </li>
+          </ul>
+          <a href="#cta-final" class="btn btn-primary">Talk To A Care Specialist</a>
+        </div>
+      </div>
+
+      <!-- Right: Carousel -->
+      <div class="problem-carousel reveal-right">
+        <img class="problem-carousel-img active" src="/images/carousel-1.webp" alt="Caregiver helping senior woman stand up" />
+        <img class="problem-carousel-img" src="/images/carousel-2.webp" alt="Compassionate care for elderly patient" />
+        <img class="problem-carousel-img" src="/images/carousel-3.webp" alt="Nurse caring for senior patient" />
+        <img class="problem-carousel-img" src="/images/carousel-4.webp" alt="Caregiver providing comfort to senior patient" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 4: SOLUTION ─── -->
+<section id="solution">
+  <div class="container">
+    <div class="solution-inner">
+      <div class="reveal-left">
+        <p class="section-eyebrow">What We Offer</p>
+        <h2 class="section-title">Simple, Reliable In-Home Care <em>That Actually Helps</em></h2>
+        <div style="font-size:18px; line-height:30px; color:var(--c-text); margin-bottom:16px;">
+          M&amp;L In-Home Care helps your loved one stay safe at home while giving your family real support.
+        </div>
+        <div style="font-size:18px; line-height:30px; color:var(--c-text);">
+          Whether you need a few hours or full-time care, we build a plan around your situation.
+        </div>
+        <div style="margin-top:32px;">
+          <a href="#cta-final" class="btn btn-primary">Book Your Free Consultation</a>
+        </div>
+      </div>
+      <div class="reveal-right delay-2">
+        <p class="problem-subheading">Support Includes:</p>
+        <div class="solution-services">
+          <div class="service-pill">Bathing &amp; dressing</div>
+          <div class="service-pill">Medication reminders</div>
+          <div class="service-pill">Companionship</div>
+          <div class="service-pill">Mobility support</div>
+          <div class="service-pill">Chronic condition help</div>
+          <div class="service-pill">Respite care</div>
+          <div class="service-pill">24/7 live-in care</div>
+          <div class="service-pill">Recovery support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 5: EMOTIONAL OUTCOME ─── -->
+<section id="outcome">
+  <div class="container">
+    <div class="outcome-inner">
+      <!-- Left: Two stacked cards -->
+      <div class="outcome-cards">
+        <!-- Card 1: Main message -->
+        <div class="outcome-card-block reveal-left delay-1">
+          <p class="section-eyebrow">The Result</p>
+          <h2 class="outcome-headline">What You Really Want Is <em>Peace Of Mind</em></h2>
+          <div class="outcome-body">
+            <p>You don't just want help.</p>
+            <p>You want to know your parent is safe.</p>
+            <p>You want less stress.</p>
+            <p>You want to stop worrying every day.</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Benefits checklist -->
+        <div class="outcome-card-block reveal-left delay-2">
+          <p class="outcome-subheading">With the right care, families gain:</p>
+          <ul class="outcome-checklist">
+            <li>
+              <span class="outcome-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              Peace of mind
+            </li>
+            <li>
+              <span class="outcome-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              Less stress
+            </li>
+            <li>
+              <span class="outcome-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              A safer routine at home
+            </li>
+            <li>
+              <span class="outcome-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              More comfort for their loved one
+            </li>
+            <li>
+              <span class="outcome-check"><svg viewBox="0 0 12 12"><path d="M2.5 6l2.5 2.5L9.5 3.5"/></svg></span>
+              More quality time together
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right: Video -->
+      <div class="outcome-image reveal-right">
+        <video autoplay loop muted playsinline class="outcome-video">
+          <source src="https://res.cloudinary.com/dnpiccvts/video/upload/q_auto:good,f_auto,w_1000,c_limit/0_Happy_Accessory_2160x3840_byrisc.webm" type="video/webm" />
+          <source src="https://res.cloudinary.com/dnpiccvts/video/upload/q_auto:good,f_auto,w_1000,c_limit/0_Happy_Accessory_2160x3840_byrisc.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 6: WHY M&L ─── -->
+<section id="why">
+  <div class="container">
+    <div class="why-inner">
+      <div class="why-header reveal-left">
+        <p class="section-eyebrow">Why M&L</p>
+        <h2 class="section-title">Why Families <em>Choose M&L</em></h2>
+        <div class="why-desc">
+          Every family's situation is different. We show up with the right support for yours.
+        </div>
+      </div>
+      <div class="why-media reveal-left delay-1">
+        <div class="why-slider" aria-roledescription="carousel">
+          <img class="why-slide is-active" src="/images/why-3.jpg" alt="" loading="lazy" />
+          <img class="why-slide" src="/images/why-1.jpg" alt="" loading="lazy" />
+          <div class="why-slider-dots" role="tablist">
+            <button class="why-slider-dot is-active" type="button" data-idx="0" aria-label="Show image 1"></button>
+            <button class="why-slider-dot" type="button" data-idx="1" aria-label="Show image 2"></button>
+          </div>
+        </div>
+      </div>
+      <div class="why-list reveal-right delay-2">
+        <div class="why-reasons">
+          <div class="why-reason">
+            <div class="icon-circle">
+              <svg viewBox="0 0 16 16"><path d="M8 2C5.2 2 3 4.2 3 7c0 3.7 5 9 5 9s5-5.3 5-9c0-2.8-2.2-5-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+            </div>
+            <div class="why-reason-text">Care built around your parent's needs</div>
+          </div>
+          <div class="why-reason">
+            <div class="icon-circle">
+              <svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6h12"/></svg>
+            </div>
+            <div class="why-reason-text">Support delivered at home — no facility required</div>
+          </div>
+          <div class="why-reason">
+            <div class="icon-circle">
+              <svg viewBox="0 0 16 16"><path d="M4 8h8M4 5h8M4 11h5"/></svg>
+            </div>
+            <div class="why-reason-text">Flexible options based on your situation</div>
+          </div>
+          <div class="why-reason">
+            <div class="icon-circle">
+              <svg viewBox="0 0 16 16"><path d="M8 14s-6-3.5-6-8a6 6 0 0 1 12 0c0 4.5-6 8-6 8z"/></svg>
+            </div>
+            <div class="why-reason-text">Less stress for the whole family</div>
+          </div>
+          <div class="why-reason">
+            <div class="icon-circle">
+              <svg viewBox="0 0 16 16"><path d="M2 13l3.5-3.5M9 3l4 4-8 8H1v-4l8-8z"/></svg>
+            </div>
+            <div class="why-reason-text">Compassionate and reliable caregivers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 7: SERVICES ─── -->
+<section id="services">
+  <div class="container">
+    <div class="reveal" style="text-align:center; max-width:560px; margin:0 auto;">
+      <p class="section-eyebrow">What We Provide</p>
+      <h2 class="section-title">Care That <em>Fits Real Life</em></h2>
+    </div>
+    <div class="services-grid">
+      <a href="#cta-final" class="service-card reveal delay-1">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        </div>
+        <div class="service-card-title">Personal Care</div>
+        <div class="service-card-desc">Help with bathing, dressing, and daily needs</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-2">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 6h4M6 9h4M6 12h2"/></svg>
+        </div>
+        <div class="service-card-title">Medication Support</div>
+        <div class="service-card-desc">Stay on track with reminders and routines</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-3">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 14s-6-3.5-6-8a6 6 0 0 1 12 0c0 4.5-6 8-6 8z"/></svg>
+        </div>
+        <div class="service-card-title">Companionship</div>
+        <div class="service-card-desc">Reduce loneliness and stay engaged</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-4">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v12M4 6l4-4 4 4"/></svg>
+        </div>
+        <div class="service-card-title">Post-Surgery Support</div>
+        <div class="service-card-desc">Extra help during recovery at home</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-1">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+        </div>
+        <div class="service-card-title">Chronic Condition Support</div>
+        <div class="service-card-desc">Daily help managing ongoing needs</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-2">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M2 8h4l2-5 2 10 2-5h2"/></svg>
+        </div>
+        <div class="service-card-title">Respite Care</div>
+        <div class="service-card-desc">Take a break while we step in</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-3">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M3 3h10v8H3zM6 11v2M10 11v2M4 13h8"/></svg>
+        </div>
+        <div class="service-card-title">24/7 Live-In Care</div>
+        <div class="service-card-desc">Full-time support when needed most</div>
+      </a>
+      <a href="#cta-final" class="service-card reveal delay-4">
+        <div class="icon-circle">
+          <svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10 5 11.5l.5-3.5L3 5.5l3.5-.5z"/></svg>
+        </div>
+        <div class="service-card-title">Veterans Care</div>
+        <div class="service-card-desc">Support for veterans and their families</div>
+      </a>
+    </div>
+    <div class="services-cta reveal delay-2">
+      <a href="#cta-final" class="btn btn-primary">Find The Right Care For Your Parent</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 8: OBJECTION ─── -->
+<section id="objection">
+  <div class="container">
+    <div class="objection-inner reveal">
+      <div class="objection-header">
+        <p class="section-eyebrow">Still Wondering</p>
+        <h2 class="section-title">Not Sure If <em>It's Time Yet?</em></h2>
+      </div>
+
+      <div class="objection-body">
+        <p>That's exactly why you should talk to someone now.</p>
+        <p>You don't need to commit to anything. You just need to understand:</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-card">
+          <img class="bento-card-img" src="/images/Options-2_Web.webp" alt="" loading="lazy" />
+          <h3 class="bento-card-text">What your options are</h3>
+        </div>
+        <div class="bento-card">
+          <img class="bento-card-img" src="/images/WhatLevel_Web.webp" alt="" loading="lazy" />
+          <h3 class="bento-card-text">What level of care makes sense</h3>
+        </div>
+        <div class="bento-card">
+          <img class="bento-card-img" src="/images/WhatNext_Web.webp" alt="" loading="lazy" />
+          <h3 class="bento-card-text">What to do next</h3>
+        </div>
+      </div>
+
+      <p class="objection-bold">
+        You don't need all the answers.<br/><em>You just need a starting point.</em>
+      </p>
+
+      <div class="objection-cta">
+        <a href="#cta-final" class="btn btn-primary">Let's Talk</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 9: TESTIMONIALS ─── -->
+<section id="testimonials">
+  <div class="container">
+    <div class="reveal" style="text-align:center; max-width:480px; margin:0 auto;">
+      <p class="section-eyebrow">Client Stories</p>
+      <h2 class="section-title">Families <em>Trust M&L</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal delay-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"M&L provided compassionate care and matched us with the right caregiver. It gave our family real peace of mind."</p>
+        <p class="testimonial-attr">— Family member, Los Angeles</p>
+      </div>
+      <div class="testimonial-card reveal delay-2">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"We were overwhelmed trying to figure out next steps. M&L made everything clear and took the pressure off our shoulders."</p>
+        <p class="testimonial-attr">— Adult daughter, San Fernando Valley</p>
+      </div>
+      <div class="testimonial-card reveal delay-3">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Our caregiver became like family. My father felt comfortable and we finally felt like we weren't doing it alone."</p>
+        <p class="testimonial-attr">— Adult son, Los Angeles</p>
+      </div>
+    </div>
+    <div class="testimonials-cta reveal delay-3">
+      <a href="#cta-final" class="btn btn-primary">Book Your Free Care Consultation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 10: PROCESS ─── -->
+<section id="process">
+  <div class="container">
+    <div class="process-inner reveal">
+      <video class="process-bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="https://res.cloudinary.com/dtjzevblt/video/upload/v1778696623/WhatHappensNext_cdexz8.mp4" type="video/mp4" />
+      </video>
+      <div class="process-header">
+        <p class="section-eyebrow">Getting Started</p>
+        <h2 class="section-title">What <em>Happens Next</em></h2>
+      </div>
+      <div class="process-steps">
+        <div class="process-step reveal delay-1">
+          <div class="process-step-number">01</div>
+          <div class="process-step-title">Book a free consultation</div>
+          <div class="process-step-desc">Tell us what's going on. No pressure, no commitment — just a conversation.</div>
+        </div>
+        <div class="process-step reveal delay-2">
+          <div class="process-step-number">02</div>
+          <div class="process-step-title">Get a clear plan</div>
+          <div class="process-step-desc">We help you understand your options and what level of care makes sense.</div>
+        </div>
+        <div class="process-step reveal delay-3">
+          <div class="process-step-number">03</div>
+          <div class="process-step-title">Move forward with confidence</div>
+          <div class="process-step-desc">Start care when you're ready — on your timeline, your terms.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 11: LOCAL ─── -->
+<section id="local">
+  <div class="container">
+    <div class="local-inner">
+      <div class="reveal-left">
+        <p class="section-eyebrow">Our Service Area</p>
+        <h2 class="section-title">Local Care <em>You Can Trust</em></h2>
+        <p style="font-size:18px; line-height:30px; color:var(--c-text); margin-bottom:24px;">
+          We serve families across Los Angeles and the San Fernando Valley, helping your loved one stay safe at home.
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <span class="location-pill">Los Angeles</span>
+          <span class="location-pill">San Fernando Valley</span>
+          <span class="location-pill">Burbank</span>
+          <span class="location-pill">Glendale</span>
+          <span class="location-pill">Pasadena</span>
+          <span class="location-pill">Encino</span>
+        </div>
+      </div>
+      <div class="reveal-right delay-2">
+        <img class="local-image" src="/images/service-area.webp" alt="Caregiver in blue uniform talking with senior woman in her home" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 12: FAQ ─── -->
+<section id="faq">
+  <div class="container">
+    <div class="faq-inner">
+      <div class="reveal-left">
+        <p class="section-eyebrow">FAQ</p>
+        <h2 class="section-title">Common <em>Questions</em></h2>
+        <p style="font-size:16px; line-height:26px; color:var(--c-text-secondary);">
+          Still have questions? Book a free consultation and we'll walk you through everything.
+        </p>
+        <div style="margin-top:32px;">
+          <a href="#cta-final" class="btn btn-primary btn-sm">Talk to a Specialist</a>
+        </div>
+      </div>
+      <div class="faq-list reveal-right delay-2">
+        <div class="faq-item open">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            How do I know if it's time?
+            <svg class="faq-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+          <div class="faq-answer">If things are getting harder or safety is a concern, it's worth a conversation. There's no harm in getting informed early.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Can they stay at home?
+            <svg class="faq-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+          <div class="faq-answer">Yes. That's the goal of in-home care — keeping your loved one in a familiar, comfortable environment with the right support.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Do you offer part-time care?
+            <svg class="faq-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+          <div class="faq-answer">Yes, from a few hours a week all the way to full-time daily support. We build the schedule around what works for your family.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Do you support adults with disabilities?
+            <svg class="faq-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+          <div class="faq-answer">Yes. We provide care for adults with a range of needs including physical disabilities and cognitive conditions.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Do you offer live-in care?
+            <svg class="faq-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+          <div class="faq-answer">Yes. 24/7 live-in care is available for families who need full-time support.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Do you help veterans?
+            <svg class="faq-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+          <div class="faq-answer">Yes. We offer specialized support for veterans and their families, including assistance navigating VA benefits.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 13: FINAL CTA ─── -->
+<section id="cta-final">
+  <div class="container">
+    <div class="cta-final-inner">
+      <div class="cta-final-left reveal-left">
+        <p class="section-eyebrow">Get Started</p>
+        <h2 class="section-title">Get Clear On The <em>Right Care Option</em></h2>
+        <p class="cta-final-subtitle">Talk to M&L about your situation and next steps. No pressure, no obligation — just a clear conversation.</p>
+        <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="icon-circle"><svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M3 3h10v10H3z"/><path d="M3 6l5 4 5-4"/></svg></div>
+            <span style="font-size:15px; color:var(--c-text-secondary);">Free consultation, no commitment</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="icon-circle"><svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg></div>
+            <span style="font-size:15px; color:var(--c-text-secondary);">Available 7 days a week</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="icon-circle"><svg viewBox="0 0 16 16" stroke="white" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 2C5.2 2 3 4.2 3 7c0 3.7 5 9 5 9s5-5.3 5-9c0-2.8-2.2-5-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
+            <span style="font-size:15px; color:var(--c-text-secondary);">Serving LA &amp; San Fernando Valley</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right delay-2">
+        <form class="cta-form" onsubmit="handleFormSubmit(event)">
+          <div class="form-group">
+            <label class="form-label" for="f-name">Your name</label>
+            <input class="form-input" id="f-name" type="text" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-email">Email</label>
+            <input class="form-input" id="f-email" type="email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-phone">Phone</label>
+            <input class="form-input" id="f-phone" type="tel" placeholder="(213) 555-0000" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-message">Your situation (optional)</label>
+            <textarea class="form-input form-textarea" id="f-message" placeholder="Tell us a bit about your situation (optional)"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">
+            Book My Free Consultation
+          </button>
+          <p class="form-microcopy">No pressure. No obligation. Just a clear next step.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">M&L</div>
+        <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:12px; line-height:22px; max-width:200px;">
+          In-Home Care<br/>Los Angeles &amp; San Fernando Valley
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Services</div>
+          <ul>
+            <li><a href="#services">Personal Care</a></li>
+            <li><a href="#services">Companionship</a></li>
+            <li><a href="#services">Medication Support</a></li>
+            <li><a href="#services">Live-In Care</a></li>
+            <li><a href="#services">Veterans Care</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <ul>
+            <li><a href="#why">About Us</a></li>
+            <li><a href="#process">How It Works</a></li>
+            <li><a href="#local">Service Area</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <a href="#cta-final" class="btn btn-primary btn-sm">
+          Book Free Consultation
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 M&L In-Home Care. All rights reserved.</p>
+      <div style="display:flex; gap:20px;">
+        <a href="#" style="font-size:12px; color:rgba(255,255,255,0.4); text-decoration:none;">Privacy Policy</a>
+        <a href="#" style="font-size:12px; color:rgba(255,255,255,0.4); text-decoration:none;">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ─── SCROLL REVEAL ───
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Trigger visible for hero immediately
+  document.querySelectorAll('#hero .reveal, #hero .reveal-left, #hero .reveal-right').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+
+  // ─── PROBLEM CAROUSEL ───
+  (function() {
+    const imgs = document.querySelectorAll('.problem-carousel-img');
+    if (imgs.length < 2) return;
+    let idx = 0;
+    setInterval(() => {
+      imgs[idx].classList.remove('active');
+      idx = (idx + 1) % imgs.length;
+      imgs[idx].classList.add('active');
+    }, 5000);
+  })();
+
+  // ─── FAQ TOGGLE ───
+  function toggleFaq(questionEl) {
+    const item = questionEl.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ─── MOBILE MENU ───
+  let mobileMenuOpen = false;
+  function toggleMobileMenu() {
+    mobileMenuOpen = !mobileMenuOpen;
+    const links = document.querySelector('.nav-links');
+    if (mobileMenuOpen) {
+      links.style.display = 'flex';
+      links.style.flexDirection = 'column';
+      links.style.position = 'absolute';
+      links.style.top = '64px';
+      links.style.left = '0';
+      links.style.right = '0';
+      links.style.background = 'rgba(251,251,249,0.98)';
+      links.style.padding = '20px 40px';
+      links.style.gap = '16px';
+      links.style.borderBottom = '1px solid #e6e8e9';
+      links.style.backdropFilter = 'blur(12px)';
+    } else {
+      links.style.display = '';
+      links.style.cssText = '';
+    }
+  }
+
+  // Close mobile menu on link click
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      if (mobileMenuOpen) toggleMobileMenu();
+    });
+  });
+
+  // ─── TRUST STRIP FORM SUBMIT ───
+  function handleTrustFormSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'We\'ll call you soon!';
+    btn.style.background = '#004250';
+    btn.disabled = true;
+    e.target.querySelectorAll('input').forEach(i => i.disabled = true);
+    setTimeout(() => { window.location.href = '/thank-you'; }, 700);
+  }
+
+  // ─── FORM SUBMIT ───
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'Sent! We\'ll be in touch soon.';
+    btn.style.background = '#004250';
+    btn.disabled = true;
+    setTimeout(() => { window.location.href = '/thank-you'; }, 700);
+  }
+
+  // ─── NAV SCROLL STYLE ───
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 20) {
+      nav.style.boxShadow = '0 2px 16px rgba(41,42,45,0.06)';
+    } else {
+      nav.style.boxShadow = 'none';
+    }
+  });
+
+  // ─── HERO EASY-FORM: TAP-TO-HIGHLIGHT (touch devices) ───
+  (function () {
+    if (!window.matchMedia('(hover: none)').matches) return;
+    const form = document.querySelector('.hero-easy-form');
+    if (!form) return;
+    document.addEventListener('pointerdown', (e) => {
+      if (form.contains(e.target)) form.classList.add('is-tapped');
+      else form.classList.remove('is-tapped');
+    }, { passive: true });
+  })();
+
+  // ─── NAV AUTO-HIDE NEAR SECTION CTAS ───
+  (function () {
+    const nav = document.querySelector('nav');
+    if (!nav || !('IntersectionObserver' in window)) return;
+
+    const mobileMq = window.matchMedia('(max-width: 900px)');
+    const ctas = Array.from(document.querySelectorAll('.btn.btn-primary:not(.nav-cta)'));
+    if (!ctas.length) return;
+
+    const intersecting = new Set();
+    let observer = null;
+
+    function applyState() {
+      if (intersecting.size > 0) nav.classList.add('is-hidden');
+      else nav.classList.remove('is-hidden');
+    }
+
+    function build() {
+      if (observer) { observer.disconnect(); observer = null; }
+      intersecting.clear();
+      nav.classList.remove('is-hidden');
+      if (mobileMq.matches) return;
+
+      const navHeight = nav.offsetHeight;
+      const bandTop = navHeight + 120;
+      const bottomInset = Math.max(0, window.innerHeight - bandTop);
+
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) intersecting.add(entry.target);
+          else intersecting.delete(entry.target);
+        });
+        applyState();
+      }, {
+        rootMargin: `0px 0px -${bottomInset}px 0px`,
+        threshold: 0,
+      });
+
+      ctas.forEach((cta) => observer.observe(cta));
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(build, 150);
+    });
+
+    build();
+  })();
+
+  // ─── WHY M&L IMAGE SLIDER ───
+  (function () {
+    const slider = document.querySelector('.why-slider');
+    if (!slider) return;
+    const slides = slider.querySelectorAll('.why-slide');
+    const dots = slider.querySelectorAll('.why-slider-dot');
+    if (slides.length < 2) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVAL = 5500;
+    let idx = 0;
+    let timer = null;
+
+    function show(n) {
+      idx = ((n % slides.length) + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+    }
+    function start() { if (!reduceMotion) timer = setInterval(() => show(idx + 1), INTERVAL); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => { show(i); stop(); start(); });
+    });
+    slider.addEventListener('mouseenter', stop);
+    slider.addEventListener('mouseleave', start);
+
+    start();
+  })();
+
+  // ─── WHEEL-INTERCEPT SECTION ADVANCE ───
+  (function () {
+    if (window.matchMedia('(max-width: 900px)').matches) return;
+    const sections = Array.from(document.querySelectorAll('section[id]'));
+    if (!sections.length) return;
+
+    const NAV_OFFSET = 64;
+    const EDGE_TOLERANCE = 12;
+    const ANIM_DURATION = 1100;
+    const COOLDOWN_MS = 240;
+    const FLICK_PAUSE_MS = 140;
+
+    let isAnimating = false;
+    let cooldownUntil = 0;
+    let lastWheelTime = 0;
+
+    function isBusy() { return isAnimating || Date.now() < cooldownUntil; }
+
+    function currentIndex() {
+      const scrollY = window.scrollY;
+      let idx = 0;
+      for (let i = 0; i < sections.length; i++) {
+        if (sections[i].offsetTop - NAV_OFFSET - 4 <= scrollY) idx = i;
+        else break;
+      }
+      return idx;
+    }
+
+    function smoothScrollTo(targetY) {
+      isAnimating = true;
+      const startY = window.scrollY;
+      const delta = targetY - startY;
+      const startTime = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - startTime) / ANIM_DURATION);
+        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        window.scrollTo({ top: startY + delta * eased, behavior: 'instant' });
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          isAnimating = false;
+          cooldownUntil = Date.now() + COOLDOWN_MS;
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function goToSection(idx) {
+      if (idx < 0 || idx >= sections.length) return;
+      const targetY = Math.max(0, sections[idx].offsetTop - NAV_OFFSET);
+      smoothScrollTo(targetY);
+    }
+
+    function onWheel(e) {
+      if (isBusy()) { e.preventDefault(); return; }
+      const dy = e.deltaY;
+      if (Math.abs(dy) < 4) return;
+
+      const now = Date.now();
+      const isFreshFlick = (now - lastWheelTime) > FLICK_PAUSE_MS;
+      lastWheelTime = now;
+
+      const idx = currentIndex();
+      const section = sections[idx];
+      const sectionTop = section.offsetTop;
+      const sectionBottom = sectionTop + section.offsetHeight;
+      const viewTop = window.scrollY + NAV_OFFSET;
+      const viewBottom = window.scrollY + window.innerHeight;
+      const goingDown = dy > 0;
+
+      // Last section + going down → let user reach the footer naturally
+      if (goingDown && idx >= sections.length - 1 && viewBottom >= sectionBottom - EDGE_TOLERANCE) {
+        return;
+      }
+
+      // Tall sections: free internal scroll. Only advance on a fresh flick at the edge.
+      const sectionTallerThanView = section.offsetHeight > (window.innerHeight - NAV_OFFSET);
+      if (sectionTallerThanView) {
+        const atBottomEdge = goingDown && viewBottom >= sectionBottom - EDGE_TOLERANCE;
+        const atTopEdge = !goingDown && viewTop <= sectionTop + EDGE_TOLERANCE;
+        if (!atBottomEdge && !atTopEdge) return;          // mid-section → free scroll
+        if (!isFreshFlick) return;                         // at edge but mid-trackpad-inertia → don't advance
+      }
+
+      e.preventDefault();
+      goToSection(goingDown ? idx + 1 : idx - 1);
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+
+    window.addEventListener('keydown', (e) => {
+      if (isBusy()) return;
+      if (e.target.matches('input, textarea, select, [contenteditable]')) return;
+
+      const idx = currentIndex();
+      let nextIdx = null;
+      if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') nextIdx = idx + 1;
+      else if (e.key === 'ArrowUp' || e.key === 'PageUp') nextIdx = idx - 1;
+      else if (e.key === 'Home') nextIdx = 0;
+      else if (e.key === 'End') nextIdx = sections.length - 1;
+      else return;
+
+      if (nextIdx === null || nextIdx < 0 || nextIdx >= sections.length) return;
+      e.preventDefault();
+      goToSection(nextIdx);
+    });
+  })();
+</script>
+
+</body>
+</html>
