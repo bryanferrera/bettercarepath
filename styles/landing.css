@@ -329,45 +329,6 @@
     stroke-linejoin: round;
   }
 
-  /* ─── PLACEHOLDER IMAGE ─── */
-  .img-placeholder {
-    width: 100%;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    position: relative;
-    background: #e8e4de;
-  }
-  .img-placeholder-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 32px;
-    text-align: center;
-    gap: 12px;
-    min-height: 420px;
-  }
-  .img-placeholder-stripes {
-    position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 12px,
-      rgba(115,114,108,0.07) 12px,
-      rgba(115,114,108,0.07) 13px
-    );
-  }
-  .img-placeholder-label {
-    position: relative;
-    font-family: monospace;
-    font-size: 11px;
-    color: var(--c-text-secondary);
-    opacity: 0.7;
-    letter-spacing: 0.05em;
-    text-align: center;
-    line-height: 1.6;
-  }
 
   /* ═══════════════════════════════════════
      SECTION 1: HERO
