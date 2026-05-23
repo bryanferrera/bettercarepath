@@ -720,13 +720,14 @@ fbq('track', 'PageView');
     btn.disabled = true;
     try {
       // no-cors → opaque response (status 0, unreadable). Catches only network-level
-      // failures, not GHL HTTP errors. Content-Type must be a safelisted value; GHL
-      // parses the JSON body regardless of header.
+      // failures, not GHL HTTP errors. Body is form-urlencoded (a no-cors-safelisted
+      // content-type) so GHL auto-extracts each field — sending JSON with text/plain
+      // makes GHL return "invalid Body payload" and drop the data.
       await fetch(CONSULTATION_WEBHOOK, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(payload).toString(),
       });
       btn.textContent = successText;
       btn.style.background = '#004250';
