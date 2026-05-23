@@ -68,6 +68,22 @@
       align-items: center;
     }
 
+    .report-cover {
+      max-width: min(320px, 60vw);
+      height: auto;
+      display: block;
+      margin: 0 auto 28px;
+      border-radius: 6px;
+      box-shadow:
+        0 30px 60px -15px rgba(0,0,0,0.55),
+        0 18px 36px -18px rgba(0,0,0,0.45);
+      transform: rotate(-1.5deg);
+    }
+
+    @media (max-width: 600px) {
+      .report-cover { margin-bottom: 22px; max-width: min(240px, 55vw); }
+    }
+
     .eyebrow {
       font-family: var(--sans);
       font-size: 12px;
