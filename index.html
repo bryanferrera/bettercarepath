@@ -711,24 +711,72 @@ fbq('track', 'PageView');
     });
   });
 
-  // ─── TRUST STRIP FORM SUBMIT ───
-  function handleTrustFormSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.textContent = 'We\'ll call you soon!';
-    btn.style.background = '#004250';
+  // ─── CONSULTATION WEBHOOK (GHL) ───
+  const CONSULTATION_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/Z5ogVfjx3loMkiXrfnTJ/webhook-trigger/24e68803-cc8d-43ad-9844-a7e3594d0f3f';
+
+  async function postConsultation(payload, btn, { sendingText, successText }) {
+    btn.textContent = sendingText;
     btn.disabled = true;
-    e.target.querySelectorAll('input').forEach(i => i.disabled = true);
+    try {
+      // no-cors → opaque response (status 0, unreadable). Catches only network-level
+      // failures, not GHL HTTP errors. Content-Type must be a safelisted value; GHL
+      // parses the JSON body regardless of header.
+      await fetch(CONSULTATION_WEBHOOK, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+      btn.textContent = successText;
+      btn.style.background = '#004250';
+      return true;
+    } catch (err) {
+      btn.textContent = 'Something went wrong — try again';
+      btn.style.background = '#b14a4a';
+      btn.disabled = false;
+      return false;
+    }
+  }
+
+  // ─── TRUST STRIP FORM SUBMIT ───
+  async function handleTrustFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const payload = {
+      source: 'hero-form',
+      name: form.querySelector('#hero-tc-name').value.trim(),
+      phone: form.querySelector('#hero-tc-phone').value.trim(),
+      page: window.location.href,
+    };
+    const ok = await postConsultation(payload, btn, {
+      sendingText: 'Sending…',
+      successText: "We'll call you soon!",
+    });
+    if (!ok) return;
+    form.querySelectorAll('input').forEach(i => i.disabled = true);
     setTimeout(() => { window.location.href = '/thank-you'; }, 700);
   }
 
   // ─── FORM SUBMIT ───
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e) {
     e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.textContent = 'Sent! We\'ll be in touch soon.';
-    btn.style.background = '#004250';
-    btn.disabled = true;
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const payload = {
+      source: 'bottom-form',
+      name: form.querySelector('#f-name').value.trim(),
+      email: form.querySelector('#f-email').value.trim(),
+      phone: form.querySelector('#f-phone').value.trim(),
+      message: form.querySelector('#f-message').value.trim(),
+      page: window.location.href,
+    };
+    const ok = await postConsultation(payload, btn, {
+      sendingText: 'Sending…',
+      successText: "Sent! We'll be in touch soon.",
+    });
+    if (!ok) return;
+    form.querySelectorAll('input, textarea').forEach(i => i.disabled = true);
     setTimeout(() => { window.location.href = '/thank-you'; }, 700);
   }
 
