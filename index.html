@@ -67,6 +67,7 @@ fbq('track', 'PageView');
           <p class="hero-easy-desc">Trusted support for families who need real help at home. Leave your details and we'll call you back.</p>
           <form onsubmit="handleTrustFormSubmit(event)">
             <input class="trust-cta-input" id="hero-tc-name" type="text" placeholder="Your name" required />
+            <input class="trust-cta-input" id="hero-tc-email" type="email" placeholder="Email" required />
             <input class="trust-cta-input" id="hero-tc-phone" type="tel" placeholder="Phone number" required />
             <button type="submit" class="btn btn-primary trust-cta-btn">Book Consultation</button>
           </form>
@@ -746,6 +747,7 @@ fbq('track', 'PageView');
     const payload = {
       source: 'hero-form',
       name: form.querySelector('#hero-tc-name').value.trim(),
+      email: form.querySelector('#hero-tc-email').value.trim(),
       phone: form.querySelector('#hero-tc-phone').value.trim(),
       page: window.location.href,
     };
