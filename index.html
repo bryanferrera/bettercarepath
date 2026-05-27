@@ -12,6 +12,7 @@
 
 <link rel="stylesheet" href="/styles/global.css">
 <link rel="stylesheet" href="/styles/landing.css">
+<link rel="stylesheet" href="/styles/qualifier.css">
 
 <!-- Meta Pixel Code -->
 <script>
@@ -64,12 +65,13 @@ fbq('track', 'PageView');
         </ul>
         <div class="reveal delay-4 hero-easy-form">
           <p class="hero-easy-title">Ready to get started?</p>
-          <p class="hero-easy-desc">Trusted support for families who need real help at home. Leave your details and we'll call you back.</p>
-          <form onsubmit="handleTrustFormSubmit(event)">
-            <input class="trust-cta-input" id="hero-tc-name" type="text" placeholder="Your name" required />
-            <input class="trust-cta-input" id="hero-tc-email" type="email" placeholder="Email" required />
-            <input class="trust-cta-input" id="hero-tc-phone" type="tel" placeholder="Phone number" required />
-            <button type="submit" class="btn btn-primary trust-cta-btn">Book Consultation</button>
+          <p class="hero-easy-desc">Leave your details and we'll walk through a few quick questions to match you with the right care.</p>
+          <form onsubmit="handleHeroFormSubmit(event)">
+            <input class="trust-cta-input" id="hero-tc-name" type="text" placeholder="Your name" autocomplete="name" required />
+            <input class="trust-cta-input" id="hero-tc-email" type="email" placeholder="Email" autocomplete="email" required />
+            <input class="trust-cta-input" id="hero-tc-phone" type="tel" placeholder="Phone number" autocomplete="tel" required />
+            <button type="submit" class="btn btn-primary trust-cta-btn">Continue</button>
+            <p class="hero-form-error" id="hero-form-error" role="alert" aria-live="polite" style="display:none;"></p>
           </form>
         </div>
       </div>
@@ -570,29 +572,14 @@ fbq('track', 'PageView');
           </div>
         </div>
       </div>
-      <div class="reveal-right delay-2">
-        <form class="cta-form" onsubmit="handleFormSubmit(event)">
-          <div class="form-group">
-            <label class="form-label" for="f-name">Your name</label>
-            <input class="form-input" id="f-name" type="text" placeholder="Your name" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="f-email">Email</label>
-            <input class="form-input" id="f-email" type="email" placeholder="your@email.com" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="f-phone">Phone</label>
-            <input class="form-input" id="f-phone" type="tel" placeholder="(213) 555-0000" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="f-message">Your situation (optional)</label>
-            <textarea class="form-input form-textarea" id="f-message" placeholder="Tell us a bit about your situation (optional)"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">
-            Book My Free Consultation
-          </button>
-          <p class="form-microcopy">No pressure. No obligation. Just a clear next step.</p>
-        </form>
+      <div class="reveal-right delay-2 cta-final-action">
+        <p class="cta-final-action-title">Start your free consultation</p>
+        <p class="cta-final-action-desc">Answer a few quick questions and we'll reach out within 24 hours with a personalized recommendation. Takes about 90 seconds.</p>
+        <button type="button" class="qualifier-cta-btn" onclick="scrollToHeroForm()">
+          Get Started
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="13 6 19 12 13 18"></polyline></svg>
+        </button>
+        <p class="cta-final-action-microcopy">No pressure. No obligation. Just a clear next step.</p>
       </div>
     </div>
   </div>
@@ -638,8 +625,8 @@ fbq('track', 'PageView');
     <div class="footer-bottom">
       <p class="footer-copy">© 2026 M&L In-Home Care. All rights reserved.</p>
       <div style="display:flex; gap:20px;">
-        <a href="#" style="font-size:12px; color:rgba(255,255,255,0.4); text-decoration:none;">Privacy Policy</a>
-        <a href="#" style="font-size:12px; color:rgba(255,255,255,0.4); text-decoration:none;">Terms of Service</a>
+        <a href="/privacy-policy" style="font-size:12px; color:rgba(255,255,255,0.4); text-decoration:none;">Privacy Policy</a>
+        <a href="/terms-of-service" style="font-size:12px; color:rgba(255,255,255,0.4); text-decoration:none;">Terms of Service</a>
       </div>
     </div>
   </div>
@@ -713,74 +700,53 @@ fbq('track', 'PageView');
   });
 
   // ─── CONSULTATION WEBHOOK (GHL) ───
+  // no-cors body MUST be form-urlencoded — GHL drops payloads sent as text/plain
+  // (returns HTTP 200 with "invalid Body payload" and contact never lands).
   const CONSULTATION_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/Z5ogVfjx3loMkiXrfnTJ/webhook-trigger/24e68803-cc8d-43ad-9844-a7e3594d0f3f';
 
-  async function postConsultation(payload, btn, { sendingText, successText }) {
-    btn.textContent = sendingText;
-    btn.disabled = true;
-    try {
-      // no-cors → opaque response (status 0, unreadable). Catches only network-level
-      // failures, not GHL HTTP errors. Body is form-urlencoded (a no-cors-safelisted
-      // content-type) so GHL auto-extracts each field — sending JSON with text/plain
-      // makes GHL return "invalid Body payload" and drop the data.
-      await fetch(CONSULTATION_WEBHOOK, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(payload).toString(),
-      });
-      btn.textContent = successText;
-      btn.style.background = '#004250';
-      return true;
-    } catch (err) {
-      btn.textContent = 'Something went wrong — try again';
-      btn.style.background = '#b14a4a';
-      btn.disabled = false;
-      return false;
+  // ─── HERO FORM: capture quick lead, then open qualifier prefilled ───
+  async function handleHeroFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const errEl = document.getElementById('hero-form-error');
+    const name = form.querySelector('#hero-tc-name').value.trim();
+    const email = form.querySelector('#hero-tc-email').value.trim();
+    const phone = form.querySelector('#hero-tc-phone').value.trim();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.textContent = 'Please enter a valid email.';
+      errEl.style.display = 'block';
+      return;
     }
-  }
+    if (phone.replace(/\D/g, '').length < 7) {
+      errEl.textContent = 'Please enter a valid phone number.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
 
-  // ─── TRUST STRIP FORM SUBMIT ───
-  async function handleTrustFormSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const btn = form.querySelector('button[type="submit"]');
-    const payload = {
-      source: 'hero-form',
-      name: form.querySelector('#hero-tc-name').value.trim(),
-      email: form.querySelector('#hero-tc-email').value.trim(),
-      phone: form.querySelector('#hero-tc-phone').value.trim(),
-      page: window.location.href,
-    };
-    const ok = await postConsultation(payload, btn, {
-      sendingText: 'Sending…',
-      successText: "We'll call you soon!",
-    });
-    if (!ok) return;
-    form.querySelectorAll('input').forEach(i => i.disabled = true);
-    setTimeout(() => { window.location.href = '/thank-you'; }, 700);
-  }
+    const originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Continuing…';
 
-  // ─── FORM SUBMIT ───
-  async function handleFormSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const btn = form.querySelector('button[type="submit"]');
-    const payload = {
-      source: 'bottom-form',
-      name: form.querySelector('#f-name').value.trim(),
-      email: form.querySelector('#f-email').value.trim(),
-      phone: form.querySelector('#f-phone').value.trim(),
-      message: form.querySelector('#f-message').value.trim(),
-      page: window.location.href,
-    };
-    const ok = await postConsultation(payload, btn, {
-      sendingText: 'Sending…',
-      successText: "Sent! We'll be in touch soon.",
-    });
-    if (!ok) return;
-    form.querySelectorAll('input, textarea').forEach(i => i.disabled = true);
-    setTimeout(() => { window.location.href = '/thank-you'; }, 700);
+    // Fire-and-forget "quick lead" POST so we have something even if they bail mid-qualifier.
+    // no-cors response is opaque; we don't gate UX on it.
+    fetch(CONSULTATION_WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        source: 'hero-quick-lead',
+        name, email, phone,
+        page: window.location.href,
+      }).toString(),
+    }).catch(err => console.warn('hero quick-lead POST failed:', err));
+
+    // Hand off to the qualifier with the contact details pre-stored.
+    openQualifier('hero-quick-lead', { name, email, phone });
+    btn.disabled = false;
+    btn.textContent = originalLabel;
   }
 
   // ─── NAV SCROLL STYLE ───
@@ -989,6 +955,528 @@ fbq('track', 'PageView');
       if (nextIdx === null || nextIdx < 0 || nextIdx >= sections.length) return;
       e.preventDefault();
       goToSection(nextIdx);
+    });
+  })();
+</script>
+
+<!-- ─── QUALIFIER MODAL ─── -->
+<div class="qualifier-overlay" id="qualifier-overlay" role="dialog" aria-modal="true" aria-labelledby="qualifier-question-current" aria-hidden="true">
+  <div class="qualifier-card">
+    <header class="qualifier-header">
+      <div class="qualifier-header-top">
+        <div class="qualifier-brand">M&amp;L</div>
+        <button type="button" class="qualifier-close" aria-label="Close" onclick="closeQualifier()">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="qualifier-progress-wrap">
+        <div class="qualifier-progress" aria-hidden="true">
+          <div class="qualifier-progress-bar" id="qualifier-progress-bar"></div>
+        </div>
+        <div class="qualifier-progress-label" id="qualifier-progress-label">Step 1 of 8</div>
+      </div>
+    </header>
+
+    <div class="qualifier-body">
+      <div class="qualifier-step-error" id="qualifier-step-error" role="alert" aria-live="polite"></div>
+
+      <!-- Step 1 -->
+      <section class="qualifier-step" data-step="1" data-name="concern" data-type="radio" data-required="true">
+        <div class="qualifier-step-eyebrow">Step 1 of 8</div>
+        <h2 class="qualifier-question" id="qualifier-question-current">What's your biggest concern right now?</h2>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Falls and/or mobility issues">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Falls and/or mobility issues</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Memory or confusion">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Memory or confusion</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Help with daily tasks">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Help with daily tasks</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Recovering from a hospital visit">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Recovering from a hospital visit</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Caregiver stress/burnout">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Caregiver stress / burnout</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Just exploring options">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Just exploring options</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="concern" value="Other" data-other>
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Other</span>
+          </label>
+          <div class="qualifier-option-other">
+            <input type="text" name="concern-other" placeholder="Tell us more (optional)" autocomplete="off">
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="qualifier-step" data-step="2" data-name="timing" data-type="radio" data-required="true">
+        <div class="qualifier-step-eyebrow">Step 2 of 8</div>
+        <h2 class="qualifier-question">How soon are you looking for support?</h2>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="timing" value="Immediately">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Immediately</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="timing" value="Within the next few weeks">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Within the next few weeks</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="timing" value="Within the next few months">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Within the next few months</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="timing" value="Just researching for now">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Just researching for now</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="qualifier-step" data-step="3" data-name="support_level" data-type="radio" data-required="true">
+        <div class="qualifier-step-eyebrow">Step 3 of 8</div>
+        <h2 class="qualifier-question">How much support do you think may be needed?</h2>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="support_level" value="A few hours of weekly help">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">A few hours of weekly help</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="support_level" value="Daily support">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Daily support</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="support_level" value="Full-time or live-in care">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Full-time or live-in care</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="support_level" value="Not sure yet">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Not sure yet</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 4 -->
+      <section class="qualifier-step" data-step="4" data-name="recent" data-type="checkbox" data-required="false">
+        <div class="qualifier-step-eyebrow">Step 4 of 8</div>
+        <h2 class="qualifier-question">Has your loved one experienced any of the following recently?</h2>
+        <p class="qualifier-helper">Select all that apply.</p>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="A fall or near-fall">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">A fall or near-fall</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="Increased forgetfulness">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Increased forgetfulness</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="Difficulty managing medications">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Difficulty managing medications</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="Trouble with bathing or dressing">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Trouble with bathing or dressing</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="Reduced mobility">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Reduced mobility</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="Recent hospital visit">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Recent hospital visit</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="recent" value="Other" data-other>
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Other</span>
+          </label>
+          <div class="qualifier-option-other">
+            <input type="text" name="recent-other" placeholder="Tell us more (optional)" autocomplete="off">
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 5 -->
+      <section class="qualifier-step" data-step="5" data-name="prior_care" data-type="radio" data-required="true">
+        <div class="qualifier-step-eyebrow">Step 5 of 8</div>
+        <h2 class="qualifier-question">Have you looked into home care before?</h2>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="prior_care" value="Yes, we currently have care in place">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Yes — we currently have care in place</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="prior_care" value="Yes, comparing options but haven't started">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Yes — comparing options but haven't started care</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="prior_care" value="No, this is my first time">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">No — this is my first time</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 6 -->
+      <section class="qualifier-step" data-step="6" data-name="priorities" data-type="checkbox" data-required="true" data-max="3">
+        <div class="qualifier-step-eyebrow">Step 6 of 8</div>
+        <h2 class="qualifier-question">What's most important when choosing care?</h2>
+        <p class="qualifier-helper">Choose up to 3.</p>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="priorities" value="Trust & safety">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Trust &amp; safety</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="priorities" value="Compassionate caregivers">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Compassionate caregivers</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="priorities" value="Flexibility">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Flexibility</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="priorities" value="Affordability">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Affordability</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="priorities" value="Experience & credentials">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Experience &amp; credentials</span>
+          </label>
+          <label class="qualifier-option" data-type="checkbox">
+            <input type="checkbox" name="priorities" value="Fast support">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Fast support</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 7 -->
+      <section class="qualifier-step" data-step="7" data-name="insurance" data-type="radio" data-required="true">
+        <div class="qualifier-step-eyebrow">Step 7 of 8</div>
+        <h2 class="qualifier-question">Do you plan on using insurance to cover the cost of care?</h2>
+        <div class="qualifier-options">
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="insurance" value="Yes">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">Yes</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="insurance" value="No">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">No</span>
+          </label>
+          <label class="qualifier-option" data-type="radio">
+            <input type="radio" name="insurance" value="I don't know what my options are">
+            <span class="qualifier-option-indicator"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></span>
+            <span class="qualifier-option-label">I don't know what my options are</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 8 -->
+      <section class="qualifier-step" data-step="8" data-name="notes" data-type="textarea" data-required="false">
+        <div class="qualifier-step-eyebrow">Step 8 of 8</div>
+        <h2 class="qualifier-question">Anything else you'd like us to know?</h2>
+        <p class="qualifier-helper">Optional — share any context that would help us prepare for our call.</p>
+        <textarea class="qualifier-textarea" name="notes" placeholder="Tell us a bit more about your situation"></textarea>
+      </section>
+
+      <!-- Success -->
+      <section class="qualifier-success" id="qualifier-success">
+        <div class="qualifier-success-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 12 10 18 20 6"></polyline></svg></div>
+        <h2 class="qualifier-success-title">Thanks — we've got it.</h2>
+        <p class="qualifier-success-body">A member of our team will reach out within 24 hours. Redirecting you to a quick summary of what to expect…</p>
+      </section>
+    </div>
+
+    <footer class="qualifier-footer" id="qualifier-footer">
+      <div class="qualifier-footer-inner">
+        <button type="button" class="qualifier-btn-back" id="qualifier-back" onclick="qualifierBack()" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="11 18 5 12 11 6"></polyline></svg>
+          Back
+        </button>
+        <button type="button" class="qualifier-btn-next" id="qualifier-next" onclick="qualifierNext()">
+          <span id="qualifier-next-label">Next</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="13 6 19 12 13 18"></polyline></svg>
+        </button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+  // ─── QUALIFIER STATE ───
+  (function () {
+    const overlay = document.getElementById('qualifier-overlay');
+    const progressBar = document.getElementById('qualifier-progress-bar');
+    const progressLabel = document.getElementById('qualifier-progress-label');
+    const stepError = document.getElementById('qualifier-step-error');
+    const backBtn = document.getElementById('qualifier-back');
+    const nextBtn = document.getElementById('qualifier-next');
+    const nextLabel = document.getElementById('qualifier-next-label');
+    const footer = document.getElementById('qualifier-footer');
+    const successPane = document.getElementById('qualifier-success');
+    const steps = Array.from(overlay.querySelectorAll('.qualifier-step'));
+    const TOTAL = steps.length;
+    const QUALIFIER_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/Z5ogVfjx3loMkiXrfnTJ/webhook-trigger/24e68803-cc8d-43ad-9844-a7e3594d0f3f';
+
+    let current = 0;
+    let openSource = 'hero';
+    let prefill = { name: '', email: '', phone: '' };
+
+    function setStep(i) {
+      current = i;
+      steps.forEach((s, idx) => s.classList.toggle('is-active', idx === i));
+      stepError.classList.remove('is-visible');
+      stepError.textContent = '';
+      backBtn.disabled = i === 0;
+      const isLast = i === TOTAL - 1;
+      nextLabel.textContent = isLast ? 'Submit' : 'Next';
+      const pct = ((i + 1) / TOTAL) * 100;
+      progressBar.style.width = pct + '%';
+      progressLabel.textContent = `Step ${i + 1} of ${TOTAL}`;
+      // Reset scroll inside the modal
+      overlay.scrollTop = 0;
+      // Focus first input for keyboard users
+      const focusable = steps[i].querySelector('input, textarea');
+      if (focusable) setTimeout(() => focusable.focus({ preventScroll: true }), 200);
+    }
+
+    function validateStep(step) {
+      const required = step.dataset.required === 'true';
+      const type = step.dataset.type;
+      if (!required) return true;
+
+      if (type === 'radio') {
+        const checked = step.querySelector('input[type="radio"]:checked');
+        if (!checked) {
+          showError('Please pick an option to continue.');
+          return false;
+        }
+      } else if (type === 'checkbox') {
+        const checked = step.querySelectorAll('input[type="checkbox"]:checked');
+        if (checked.length === 0) {
+          showError('Please pick at least one option.');
+          return false;
+        }
+        const max = parseInt(step.dataset.max || '0', 10);
+        if (max && checked.length > max) {
+          showError(`Please choose at most ${max} options.`);
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function showError(msg) {
+      stepError.textContent = msg;
+      stepError.classList.add('is-visible');
+    }
+
+    function collectAnswers() {
+      const answers = {};
+      steps.forEach(step => {
+        const name = step.dataset.name;
+        const type = step.dataset.type;
+        if (type === 'radio') {
+          const checked = step.querySelector('input[type="radio"]:checked');
+          if (checked) {
+            let value = checked.value;
+            if (checked.dataset.other !== undefined) {
+              const otherTxt = step.querySelector('input[name$="-other"]').value.trim();
+              value = otherTxt ? `Other: ${otherTxt}` : 'Other';
+            }
+            answers[name] = value;
+          }
+        } else if (type === 'checkbox') {
+          const checked = Array.from(step.querySelectorAll('input[type="checkbox"]:checked'));
+          const vals = checked.map(c => {
+            if (c.dataset.other !== undefined) {
+              const otherTxt = step.querySelector('input[name$="-other"]').value.trim();
+              return otherTxt ? `Other: ${otherTxt}` : 'Other';
+            }
+            return c.value;
+          });
+          if (vals.length) answers[name] = vals.join(', ');
+        } else if (type === 'textarea') {
+          const txt = step.querySelector('textarea').value.trim();
+          if (txt) answers[name] = txt;
+        }
+      });
+      return answers;
+    }
+
+    function buildMessage(answers) {
+      const labels = {
+        concern: 'Biggest concern',
+        timing: 'Timing',
+        support_level: 'Support level',
+        recent: 'Recent experiences',
+        prior_care: 'Prior home-care experience',
+        priorities: 'Most important when choosing care',
+        insurance: 'Insurance plans',
+        notes: 'Additional notes',
+      };
+      const order = ['concern', 'timing', 'support_level', 'recent', 'prior_care', 'priorities', 'insurance', 'notes'];
+      return order
+        .filter(k => answers[k])
+        .map(k => `${labels[k]}: ${answers[k]}`)
+        .join('\n');
+    }
+
+    async function submit() {
+      const answers = collectAnswers();
+      const payload = {
+        name: prefill.name,
+        email: prefill.email,
+        phone: prefill.phone,
+        message: buildMessage(answers),
+        source: 'landing-form',
+        opened_from: openSource,
+        page: window.location.href,
+      };
+
+      nextBtn.disabled = true;
+      nextLabel.textContent = 'Sending…';
+
+      try {
+        await fetch(QUALIFIER_WEBHOOK, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(payload).toString(),
+        });
+        steps.forEach(s => s.classList.remove('is-active'));
+        successPane.classList.add('is-visible');
+        footer.style.display = 'none';
+        progressBar.style.width = '100%';
+        progressLabel.textContent = 'Complete';
+        setTimeout(() => { window.location.href = '/thank-you'; }, 1400);
+      } catch (err) {
+        console.error('Qualifier submit failed:', err);
+        showError('Something went wrong sending your details. Please try again in a moment.');
+        nextBtn.disabled = false;
+        nextLabel.textContent = 'Submit';
+      }
+    }
+
+    window.qualifierNext = function () {
+      const step = steps[current];
+      if (!validateStep(step)) return;
+      if (current === TOTAL - 1) {
+        submit();
+      } else {
+        setStep(current + 1);
+      }
+    };
+    window.qualifierBack = function () {
+      if (current === 0) return;
+      setStep(current - 1);
+    };
+
+    window.openQualifier = function (source, prefillData) {
+      openSource = source || 'hero';
+      prefill = {
+        name: (prefillData && prefillData.name) || '',
+        email: (prefillData && prefillData.email) || '',
+        phone: (prefillData && prefillData.phone) || '',
+      };
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('qualifier-open');
+      setStep(0);
+      successPane.classList.remove('is-visible');
+      footer.style.display = '';
+      nextBtn.disabled = false;
+      nextLabel.textContent = 'Next';
+    };
+
+    // Smooth scroll the page to the hero form (used by bottom CTA)
+    window.scrollToHeroForm = function () {
+      const target = document.querySelector('.hero-easy-form');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          const nameInput = document.getElementById('hero-tc-name');
+          if (nameInput) nameInput.focus({ preventScroll: true });
+        }, 600);
+      }
+    };
+    window.closeQualifier = function () {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('qualifier-open');
+    };
+
+    // Click backdrop to close
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeQualifier();
+    });
+
+    // Esc to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeQualifier();
+    });
+
+    // Reveal "Other" inputs when their option is selected (radio fires for single, checkbox toggles)
+    overlay.addEventListener('change', (e) => {
+      const input = e.target;
+      if (!input || input.dataset.other === undefined) {
+        // Re-render Other visibility for radio steps (deselecting "Other" by picking another radio)
+        const step = input?.closest('.qualifier-step');
+        if (step) {
+          const otherEl = step.querySelector('.qualifier-option-other');
+          if (otherEl) {
+            const otherInput = step.querySelector('input[data-other]');
+            otherEl.classList.toggle('is-visible', !!(otherInput && otherInput.checked));
+          }
+        }
+        return;
+      }
+      const step = input.closest('.qualifier-step');
+      const otherEl = step.querySelector('.qualifier-option-other');
+      if (otherEl) otherEl.classList.toggle('is-visible', input.checked);
     });
   })();
 </script>
